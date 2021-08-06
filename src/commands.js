@@ -1,5 +1,3 @@
-
-
 const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient
 const connectionURL = 'mongodb://127.0.0.1:27017'
@@ -12,7 +10,7 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
  console.log("Connected to the database at "+connectionURL)
  // Start to interact with the database
 })
-
+//I HAVE NO IDEA WHAT THE FUCK IM DOING
 const { Client, Intents } = require('discord.js');
 const config = require('dotenv').config()
 
