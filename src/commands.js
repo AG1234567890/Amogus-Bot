@@ -4,7 +4,9 @@ const connectionURL = 'mongodb://127.0.0.1:27017'
 const databaseName = 'task-manager'
 MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) => {
  if (error) {
+	console.log(error)
  return console.log('Unable to connect to database!')
+
  }
  const db = client.db(databaseName)
  console.log("Connected to the database at "+connectionURL)
@@ -23,3 +25,7 @@ client.once('ready', () => {
 });
 
 client.login(process.env.TOKEN);
+
+app.listen(3040, "localhost", function() {
+	console.log("Server started.......");
+  });
