@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/commands.js"
+    "worker": "node index.js"
   },
   "keywords": [],
   "author": "",
