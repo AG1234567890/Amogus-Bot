@@ -12,20 +12,33 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
  console.log("Connected to the database at "+connectionURL)
  // Start to interact with the database
 })
-
-const { Client, Intents } = require('discord.js');
 const config = require('dotenv').config()
+const fetch = require("node-fetch")
+const prefix= "sus "
+const Discord = require("discord.js")
+const client = new Discord.Client()
 
-const TOKEN = process.env.token
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const getQuote = () => {
+	return fetch("https://zenquotes.io/api/random")
+	  .then(res => {
+		return res.json()
+		})
+	  .then(data => {
+		return data[0]["q"] + " -" + data[0]["a"]
+	  })
+  }
 
-client.once('ready', () => {
-	console.log('Logged in!');
-});
+client.on("ready", () => {
+  console.log(`Logged in as ${client.user.tag}!`)
+})
+
+client.on("message", msg => {
+  if (msg.content === prefix+"inspire") {
+    getQuote().then(quote => msg.channel.send(quote))
+  }
+})
+
 
 client.login(process.env.TOKEN);
 
-// app.listen(3040, "localhost", function() {
-// 	console.log("Server started.......");
-//   });
