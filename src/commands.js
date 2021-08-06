@@ -26,6 +26,6 @@ client.once('ready', () => {
 
 client.login(process.env.TOKEN);
 
-app.listen(3040, "localhost", function() {
-	console.log("Server started.......");
-  });
+// app.listen(3040, "localhost", function() {
+// 	console.log("Server started.......");
+//   });
