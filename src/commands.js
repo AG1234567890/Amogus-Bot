@@ -1,3 +1,5 @@
+
+
 const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient
 const connectionURL = 'mongodb://127.0.0.1:27017'
@@ -10,3 +12,16 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
  console.log("Connected to the database at "+connectionURL)
  // Start to interact with the database
 })
+
+const { Client, Intents } = require('discord.js');
+const config = require('dotenv').config()
+
+const TOKEN = process.env.token
+
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+
+client.once('ready', () => {
+	console.log('Logged in!');
+});
+
+client.login(process.env.TOKEN);
