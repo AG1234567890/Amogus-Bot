@@ -7,7 +7,7 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 	storage: 'database.sqlite',
 });
 
-const Users = require('./models/users)(sequelize, Sequelize.DataTypes');
+const Users = require('./models/users)')(sequelize, Sequelize.DataTypes);
 const CurrencyShop = require('./models/currencyshop')(sequelize, Sequelize.DataTypes);
 const UserItems = require('./models/useritems')(sequelize, Sequelize.DataTypes);
 
