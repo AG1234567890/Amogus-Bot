@@ -1,15 +1,38 @@
 const Sequelize = require('sequelize');
-const { Client, Intents } = require('discord.js');
+
 const dotenv = require("dotenv")
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+
 const fetch = require("node-fetch")
-
+const { Op } = require('sequelize');
+const { Collection, Formatters, Client, Intents } = require('discord.js');
+const { Users, CurrencyShop } = require('./dbObjects.js');
 const prefix = "sus "
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const currency = new Collection();
 
-/*
- * Make sure you are on at least version 5 of Sequelize! Version 4 as used in this guide will pose a security threat.
- * You can read more about this issue on the [Sequelize issue tracker](https://github.com/sequelize/sequelize/issues/7310).
- */
+Reflect.defineProperty(currency, 'add', {
+	/* eslint-disable-next-line func-name-matching */
+	value: async function add(id, amount) {
+		const user = currency.get(id);
+		if (user) {
+			user.balance += Number(amount);
+			return user.save();
+		}
+		const newUser = await Users.create({ user_id: id, balance: amount });
+		currency.set(id, newUser);
+		return newUser;
+	},
+});
+
+Reflect.defineProperty(currency, 'getBalance', {
+	/* eslint-disable-next-line func-name-matching */
+	value: function getBalance(id) {
+		const user = currency.get(id);
+		return user ? user.balance : 0;
+	},
+});
+
+
 
 const getQuote = () => {
 	return fetch("https://zenquotes.io/api/random")
@@ -43,17 +66,15 @@ const Tags = sequelize.define('tags', {
 	},
 });
 
-client.once('ready', () => {
-	/*
-	 * equivalent to: CREATE TABLE tags(
-	 * name VARCHAR(255),
-	 * description TEXT,
-	 * username VARCHAR(255),
-	 * usage_count INT NOT NULL DEFAULT 0
-	 * );
-	 */
-	Tags.sync();
+client.once('ready', async () => {
+	const storedBalances = await Users.findAll();
+	storedBalances.forEach(b => currency.set(b.user_id, b));
 	console.log("Bot has Logged In")
+});
+
+client.on('messageCreate', async message => {
+	if (message.author.bot) return;
+	currency.add(message.author.id, 1);
 });
 
 client.on('message', async message => {
@@ -64,9 +85,33 @@ client.on('message', async message => {
 	
 	if (command === "inspire") {
 		getQuote().then(quote => message.channel.send(quote))
+	} else if (command === "bal") {
+		const target = message.author;
+return message.reply(`${target.tag} has ${currency.getBalance(target.id)}💰`);
+	}  else if (command === 'inventory') {
+		// [delta]
+	} else if (command === 'transfer') {
+		// [epsilon]
+	} else if (command === 'buy') {
+		// [zeta]
+	} else if (command === 'shop') {
+		// [theta]
+	} else if (command === 'leaderboard') {
+		// [lambda]
 	}
 
 	
 });
+client.on("message", async message => {
+	if (!message.content.startsWith(prefix)){
+			currency.add(message.author.id, 5);
+	}
 
-client.login("");
+	if (message.content.includes("amogus")){
+		message.channel.send("SUSSY AMOGUS WHEN THE IMPOSOTOR IS SUSSSY")
+	} else if (message.content.includes("based")){
+		message.channel.send(`${message.author} Based? Based on what? Your mom? Be more specific`)
+	}
+})
+
+client.login(process.env.token);
