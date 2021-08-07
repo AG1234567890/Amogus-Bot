@@ -90,7 +90,11 @@ client.on("message", async (message) => {
   if (command === "inspire") {
     getQuote().then((quote) => message.channel.send(quote));
   } else if (command === "bal") {
-    const target = args[0];
+
+		 const target = args[0] ?? message.author;
+
+
+
 	console.log(args[0], "   bal   ", )
     return message.reply(
       `${target} has ${currency.getBalance(target)} SusCoins 💸 `
@@ -173,4 +177,4 @@ client.on("message", async (message) => {
   }
 });
 
-client.login(process.env.TOKEN);
+client.login("ODczMDcwNjEwMDU2NjMwMzI0.YQzEXg.hGc22p6FpJgyzn7rRSst8wdDQPc");
