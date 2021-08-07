@@ -128,7 +128,7 @@ client.on("message", async (message) => {
         `Please enter an amount greater than zero, ${message.author}.`
       );
 
-    currency.add(message.author.id, -transferAmount);
+    currency.add("<@!"+message.author.id+">", -transferAmount);
     currency.add(transferTarget, transferAmount);
 
     return message.reply(
@@ -177,4 +177,4 @@ client.on("message", async (message) => {
   }
 });
 
-client.login(process.env.TOKEN);
+client.login("ODczMDcwNjEwMDU2NjMwMzI0.YQzEXg.QKPWRuHmDxb0IqCAnqPeuwfb5lM");
