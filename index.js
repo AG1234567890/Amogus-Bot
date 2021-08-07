@@ -70,12 +70,13 @@ client.once('ready', async () => {
 	const storedBalances = await Users.findAll();
 	storedBalances.forEach(b => currency.set(b.user_id, b));
 	console.log("Bot has Logged In")
+	client.user.setPresence({ activities: [{ name: ' amogus' }], status: 'idle' });
 });
 
-client.on('messageCreate', async message => {
-	if (message.author.bot) return;
-	currency.add(message.author.id, 1);
-});
+// client.on('messageCreate', async message => {
+// 	if (message.author.bot) return;
+// 	currency.add(message.author.id, 1);
+// });
 
 client.on('message', async message => {
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -87,7 +88,7 @@ client.on('message', async message => {
 		getQuote().then(quote => message.channel.send(quote))
 	} else if (command === "bal") {
 		const target = message.author;
-return message.reply(`${target.tag} has ${currency.getBalance(target.id)} SusCoins 💸`);
+return message.reply(`${target.tag} has ${currency.getBalance(target.id)} SusCoins 💸 `);
 	}  else if (command === 'inventory') {
 		// [delta]
 	} else if (command === 'transfer') {
@@ -114,4 +115,4 @@ client.on("message", async message => {
 	}
 })
 
-client.login("ODczMDcwNjEwMDU2NjMwMzI0.YQzEXg.NhJTTaxQEoziDXTQyR-CoEO6qUU");
+client.login(process.env.TOKEN");
