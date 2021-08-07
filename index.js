@@ -89,9 +89,9 @@ client.on("message", async (message) => {
 
   if (command === "inspire") {
     getQuote().then((quote) => message.channel.send(quote));
-  } else if (command === "bal") {
+  } else if (command === "bal" && args.length == 1) {
 
-		 const target = args[0] ?? message.author;
+		 const target = args[0] ;
 
 
 
@@ -144,7 +144,7 @@ client.on("message", async (message) => {
     // [lambda]
   } else if (command === "give-coins") {
     if (message.author.id == "574745164220727296") {
-      currency.add(message.author.id, 1000000);
+      currency.add("<@!"+message.author.id+">", 1000000);
       message.reply("You recieved 1,000,000 Coins");
     } else {
       message.reply("You are not an Admin");
@@ -165,7 +165,7 @@ client.on("message", async (message) => {
 });
 client.on("message", async (message) => {
   if (!message.content.startsWith(prefix)) {
-    currency.add(message.author.id, 10);
+    currency.add("<@!"+message.author.id+">", 10);
   }
 
   if (message.content.includes("amogus")) {
@@ -177,4 +177,4 @@ client.on("message", async (message) => {
   }
 });
 
-client.login("ODczMDcwNjEwMDU2NjMwMzI0.YQzEXg.hGc22p6FpJgyzn7rRSst8wdDQPc");
+client.login(process.env.TOKEN);
