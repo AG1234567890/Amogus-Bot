@@ -5,7 +5,7 @@ const dotenv = require("dotenv")
 const fetch = require("node-fetch")
 const { Op } = require('sequelize');
 const { Collection, Formatters, Client, Intents } = require('discord.js');
-const { Users, CurrencyShop } = require('./dbObjects.js');
+const { Users, CurrencyShop } = require('./dbObjects');
 const prefix = "sus "
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 const currency = new Collection();
@@ -114,4 +114,4 @@ client.on("message", async message => {
 	}
 })
 
-client.login(process.env.token);
+client.login("ODczMDcwNjEwMDU2NjMwMzI0.YQzEXg.moo6QUzUGFCDRgpdjzIwy_wozfk");
