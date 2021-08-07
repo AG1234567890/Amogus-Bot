@@ -134,7 +134,7 @@ client.on("message", async (message) => {
     return message.reply(
       `Successfully transferred ${transferAmount}💰 to ${
         transferTarget
-      }. Your current balance is ${currency.getBalance(message.author.id)}💰`
+      }. Your current balance is ${currency.getBalance("<@!"+message.author.id+">")}💰`
     );
   } else if (command === "buy") {
     // [zeta]
@@ -177,4 +177,4 @@ client.on("message", async (message) => {
   }
 });
 
-client.login("ODczMDcwNjEwMDU2NjMwMzI0.YQzEXg.QKPWRuHmDxb0IqCAnqPeuwfb5lM");
+client.login("ODczMDcwNjEwMDU2NjMwMzI0.YQzEXg.Q5_4LbB9r_zgc6ATDYKEk99gwl8");
