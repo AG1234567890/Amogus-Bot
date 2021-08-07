@@ -1,23 +1,15 @@
-const mongodb = require('mongodb')
-const MongoClient = mongodb.MongoClient
-const connectionURL = 'mongodb://127.0.0.1:27017'
-const databaseName = 'task-manager'
-MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) => {
- if (error) {
-	console.log(error)
- return console.log('Unable to connect to database!')
-
- }
- const db = client.db(databaseName)
- console.log("Connected to the database at "+connectionURL)
- // Start to interact with the database
-})
-const config = require('dotenv').config()
+const Sequelize = require('sequelize');
+const { Client, Intents } = require('discord.js');
+const dotenv = require("dotenv")
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 const fetch = require("node-fetch")
-const prefix= "sus "
-const Discord = require("discord.js")
-const client = new Discord.Client()
 
+const prefix = "sus "
+
+/*
+ * Make sure you are on at least version 5 of Sequelize! Version 4 as used in this guide will pose a security threat.
+ * You can read more about this issue on the [Sequelize issue tracker](https://github.com/sequelize/sequelize/issues/7310).
+ */
 
 const getQuote = () => {
 	return fetch("https://zenquotes.io/api/random")
@@ -29,16 +21,52 @@ const getQuote = () => {
 	  })
   }
 
-client.on("ready", () => {
-  console.log(`Logged in as ${client.user.tag}!`)
-})
+const sequelize = new Sequelize('database', 'username', 'password', {
+	host: 'localhost',
+	dialect: 'sqlite',
+	logging: false,
+	// SQLite only
+	storage: 'database.sqlite',
+});
 
-client.on("message", msg => {
-  if (msg.content === prefix+"inspire") {
-    getQuote().then(quote => msg.channel.send(quote))
-  }
-})
+const Tags = sequelize.define('tags', {
+	name: {
+		type: Sequelize.STRING,
+		unique: true,
+	},
+	description: Sequelize.TEXT,
+	username: Sequelize.STRING,
+	usage_count: {
+		type: Sequelize.INTEGER,
+		defaultValue: 0,
+		allowNull: false,
+	},
+});
 
+client.once('ready', () => {
+	/*
+	 * equivalent to: CREATE TABLE tags(
+	 * name VARCHAR(255),
+	 * description TEXT,
+	 * username VARCHAR(255),
+	 * usage_count INT NOT NULL DEFAULT 0
+	 * );
+	 */
+	Tags.sync();
+	console.log("Bot has Logged In")
+});
 
-client.login(process.env.TOKEN);
+client.on('message', async message => {
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
+    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const command = args.shift().toLowerCase();
+	
+	if (command === "inspire") {
+		getQuote().then(quote => message.channel.send(quote))
+	}
+
+	
+});
+
+client.login("");
