@@ -87,7 +87,7 @@ client.on('message', async message => {
 		getQuote().then(quote => message.channel.send(quote))
 	} else if (command === "bal") {
 		const target = message.author;
-return message.reply(`${target.tag} has ${currency.getBalance(target.id)}💰`);
+return message.reply(`${target.tag} has ${currency.getBalance(target.id)} SusCoins 💸`);
 	}  else if (command === 'inventory') {
 		// [delta]
 	} else if (command === 'transfer') {
@@ -114,4 +114,4 @@ client.on("message", async message => {
 	}
 })
 
-client.login(process.env.TOKEN);
+client.login("ODczMDcwNjEwMDU2NjMwMzI0.YQzEXg.NhJTTaxQEoziDXTQyR-CoEO6qUU");
