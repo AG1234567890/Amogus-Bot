@@ -217,6 +217,10 @@ client.on("message", async (message) => {
 
   if (message.content.includes("amogus")) {
     message.channel.send("SUSSY AMOGUS WHEN THE IMPOSOTOR IS SUSSSY");
+    message.react('😄');
+    message.react('S');
+    message.react('U');
+    message.react('5');
   } else if (message.content.includes("based")) {
     message.channel.send(
       `${message.author} Based? Based on what? Your mom? Be more specific`
