@@ -80,10 +80,7 @@ client.once("ready", async () => {
   const storedBalances = await Users.findAll();
   storedBalances.forEach((b) => currency.set(b.user_id, b));
   console.log("Bot has Logged In");
-  client.user.setPresence({
-    activities: [{ name: " with amogus" }],
-    status: "idle",
-  });
+  client.user.setStatus('dnd');
   client.user.setActivity('Amogus', { type: 'WATCHING' });
 });
 
