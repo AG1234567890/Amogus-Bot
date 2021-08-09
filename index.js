@@ -102,7 +102,7 @@ client.on("message", async (message) => {
   } else if (command === "inventory") {
     const target =   message.author;
 
-    const user = await Users.findOne({ where: { user_id: target.id } });
+    const user = await Users.findOne({ where: { user_id: "<@!"+target.id+">" } });
 
     const items = await user.getItems();
 
@@ -127,19 +127,36 @@ client.on("message", async (message) => {
       return message.reply(
         `Please enter an amount greater than zero, ${message.author}.`
       );
-
+	if (!typeof(transferAmount) == "number"){
+		return message.reply("Bruh No")
+	}
     currency.add("<@!"+message.author.id+">", -transferAmount);
     currency.add(transferTarget, transferAmount);
+	
 
     return message.reply(
       `Successfully transferred ${transferAmount}💰 to ${
         transferTarget
       }. Your current balance is ${currency.getBalance("<@!"+message.author.id+">")}💰`
     );
+	 
+
   } else if (command === "buy") {
-    // [zeta]
+    const itemName = args[0];
+const item = await CurrencyShop.findOne({ where: { name: { [Op.like]: itemName } } });
+if (!item) return message.reply(`That item doesn't exist.`);
+if (item.cost > currency.getBalance("<@!"+message.author.id)+">") {
+	return message.reply(`You currently have ${currency.getBalance("<@!"+message.author.id+">")}, but the ${item.name} costs ${item.cost}!`);
+}
+
+const user = await Users.findOne({ where: { user_id: "<@!"+message.author.id+">" } });
+currency.add("<@!"+message.author.id+">", -item.cost);
+await user.addItem(item);
+
+message.reply(`You've bought: ${item.name}.`);
   } else if (command === "shop") {
-    // [theta]
+    const items = await CurrencyShop.findAll();
+  return message.channel.send(items.map(i => `${i.name}: ${i.cost}💰`).join('\n'));
   } else if (command === "leaderboard") {
     // [lambda]
   } else if (command === "give-coins") {
@@ -177,4 +194,4 @@ client.on("message", async (message) => {
   }
 });
 
-client.login("ODczMDcwNjEwMDU2NjMwMzI0.YQzEXg.Q5_4LbB9r_zgc6ATDYKEk99gwl8");
+client.login(process.env.TOKEN);
