@@ -224,7 +224,7 @@ client.on("message", async (message) => {
       `${message.author} Based? Based on what? Your mom? Be more specific`
     );
   } else if (message.content.includes("sad")) {
-    message.channel.reply("cope harder")
+    message.reply("cope harder")
   }
 });
 
