@@ -9,7 +9,11 @@ module.exports = (sequelize, DataTypes) => {
 			defaultValue: 0,
 			allowNull: false,
 		},
-
+		pet: {
+			type: DataTypes.STRING,
+			defaultValue: "",
+			allowNull: false
+		}
 	}, {
 		timestamps: false,
 	});

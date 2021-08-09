@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-
+const randomPuppy = require('random-puppy');
 const dotenv = require("dotenv");
 
 const fetch = require("node-fetch");
@@ -34,6 +34,14 @@ Reflect.defineProperty(currency, "getBalance", {
     return user ? user.balance : 0;
   },
 });
+
+Reflect.defineProperty(currency, "setBalance", {
+  value: function setBalance(id, amount) {
+    const user = currency.get(id)
+    user.balance = Number(amount);
+    return user.save();
+  }
+})
 
 const getQuote = () => {
   return fetch("https://zenquotes.io/api/random")
@@ -114,7 +122,7 @@ client.on("message", async (message) => {
         .join(", ")}`
     );
   } else if (command === "transfer" && args.length === 2) {
-    const currentAmount = currency.getBalance(message.author.id);
+    const currentAmount = currency.getBalance("<@!"+message.author.id+">");
 	console.log(args)
     const transferAmount = args[0]//.getInteger("amount");
     const transferTarget = args[1]//.getUser("user");
@@ -168,7 +176,8 @@ message.reply(`You've bought: ${item.name}.`);
   } else if (command === "daily") {
     if (workedRecently.has(message.author.id)) {
       message.channel.send("Wait 24 Hours before getting your daily bonus again. - " + message.author.username);
-} else {
+} 
+ else {
   
   message.reply(`You recieved 25000 Sus Coins`)
   currency.add("<@!"+message.author.id+">", 25000);
@@ -179,6 +188,13 @@ message.reply(`You've bought: ${item.name}.`);
     workedRecently.delete(message.author.id);
   }, 24*60*60*1000);
 }
+  } else if (command === "steal") {
+    if(message.mentions.members.first()) {
+      stealTarget = args[0]
+      if (currency.getBalance(stealTarget)<10000) {
+        message.reply("The man is poor leave him alone")
+      }
+    }
   }
 });
 client.on("message", async (message) => {
@@ -195,4 +211,4 @@ client.on("message", async (message) => {
   }
 });
 
-client.login(process.env.TOKEN);
+client.login("ODczMDcwNjEwMDU2NjMwMzI0.YQzEXg.SVhl0Hd6WIBvNbPkQsFIEe8JDRw");
