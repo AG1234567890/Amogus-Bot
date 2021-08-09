@@ -4,8 +4,10 @@ const dotenv = require("dotenv");
 
 const fetch = require("node-fetch");
 const { Op } = require("sequelize");
-const { Collection, Formatters, Client, Intents } = require("discord.js");
+const { Collection, Formatters, Client, Intents, MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
+const discord = require ("discord.js")
 const { Users, CurrencyShop } = require("./dbObjects");
+
 const prefix = "sus ";
 const workedRecently = new Set();
 const stolenRecently = new Set()
@@ -13,6 +15,8 @@ const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
 const currency = new Collection();
+
+
 
 Reflect.defineProperty(currency, "add", {
   /* eslint-disable-next-line func-name-matching */
@@ -193,22 +197,30 @@ message.reply(`You've bought: ${item.name}.`);
       if (currency.getBalance(stealTarget)<10000) {
         message.reply("The man is poor leave him alone")
       } else {
-        if (stolenRecently.has(msg.author.id)) {
-          msg.channel.send("Wait 1 minute before getting typing this again. - " + msg.author);
+        if (stolenRecently.has(message.author.id)) {
+          message.channel.send("Wait 10 minutes before robbing again - " + message.author.username);
   } else {
+    const num = Math.floor(Math.random() * 11);
+    currentBalance = currency.getBalance("<@!"+message.author.id+">")
+    targetBalance = currency.getBalance(stealTarget)
+    currency.setBalance("<@!"+message.author.id+">", Math.floor(targetBalance*0.1) )
+    currency.setBalance(stealTarget, Math.floor(targetBalance*0.9) )
 
-         // the user can type the command ... your command code goes here :)
-
-      // Adds the user to the set so that they can't talk for a minute
-      stolenRecently.add(msg.author.id);
+    message.reply("You stole "+Math.floor(targetBalance*0.1)+" Coins!")
+      
+      stolenRecently.add(message.author.id);
       setTimeout(() => {
         // Removes the user from the set after a minute
-        stolenRecently.delete(msg.author.id);
+        stolenRecently.delete(message.author.id);
       }, 10*60000);
   }
       }
     }
+  }//steal command
+  else if (command === "ping") {
+    
   }
+
 });
 client.on("message", async (message) => {
   if (!message.content.startsWith(prefix)) {
