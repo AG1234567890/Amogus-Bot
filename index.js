@@ -157,9 +157,7 @@ message.reply(`You've bought: ${item.name}.`);
   } else if (command === "shop") {
     const items = await CurrencyShop.findAll();
   return message.channel.send(items.map(i => `${i.name}: ${i.cost}💰`).join('\n'));
-  } else if (command === "leaderboard") {
-    // [lambda]
-  } else if (command === "give-coins") {
+  }  else if (command === "give-coins") {
     if (message.author.id == "574745164220727296") {
       currency.add("<@!"+message.author.id+">", 1000000);
       message.reply("You recieved 1,000,000 Coins");
