@@ -8,6 +8,7 @@ const { Collection, Formatters, Client, Intents } = require("discord.js");
 const { Users, CurrencyShop } = require("./dbObjects");
 const prefix = "sus ";
 const workedRecently = new Set();
+const stolenRecently = new Set()
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
@@ -83,6 +84,7 @@ client.once("ready", async () => {
     activities: [{ name: " with amogus" }],
     status: "idle",
   });
+  client.user.setActivity('Amogus', { type: 'WATCHING' });
 });
 
 // client.on('messageCreate', async message => {
@@ -193,6 +195,20 @@ message.reply(`You've bought: ${item.name}.`);
       stealTarget = args[0]
       if (currency.getBalance(stealTarget)<10000) {
         message.reply("The man is poor leave him alone")
+      } else {
+        if (stolenRecently.has(msg.author.id)) {
+          msg.channel.send("Wait 1 minute before getting typing this again. - " + msg.author);
+  } else {
+
+         // the user can type the command ... your command code goes here :)
+
+      // Adds the user to the set so that they can't talk for a minute
+      stolenRecently.add(msg.author.id);
+      setTimeout(() => {
+        // Removes the user from the set after a minute
+        stolenRecently.delete(msg.author.id);
+      }, 10*60000);
+  }
       }
     }
   }
