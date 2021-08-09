@@ -7,6 +7,7 @@ const { Op } = require("sequelize");
 const { Collection, Formatters, Client, Intents } = require("discord.js");
 const { Users, CurrencyShop } = require("./dbObjects");
 const prefix = "sus ";
+const workedRecently = new Set();
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
@@ -164,18 +165,20 @@ message.reply(`You've bought: ${item.name}.`);
     } else {
       message.reply("You are not an Admin");
     }
-  } else if (command === "invest") {
-    const target = message.author;
-    if (args.length === 2) {
-      if (args[1] > 100) {
-        const investment = args[1];
-        if (args[0] === "apples") {
-          setTimeout(() => {}, 2 * 3600 * 1000);
-        }
-      } else {
-        message.reply("You must invest more than 100 sus coins!");
-      }
-    }
+  } else if (command === "daily") {
+    if (workedRecently.has(message.author.id)) {
+      message.channel.send("Wait 24 Hours before getting your daily bonus again. - " + message.author.username);
+} else {
+  
+  message.reply(`You recieved 25000 Sus Coins`)
+  currency.add("<@!"+message.author.id+">", 25000);
+
+  workedRecently.add(message.author.id);
+  setTimeout(() => {
+    // Removes the user from the set after a minute
+    workedRecently.delete(message.author.id);
+  }, 24*60*60*1000);
+}
   }
 });
 client.on("message", async (message) => {
