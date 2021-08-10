@@ -207,6 +207,10 @@ message.reply(`You've bought: ${item.name}.`);
         if (stolenRecently.has(message.author.id)) {
           message.channel.send("Wait 10 minutes before robbing again - " + message.author.username);
   } else {
+    const user = await Users.findOne({ where: { user_id: splice(stealTarget) } });
+
+    const items = await user.getItems();
+    console.log(items)
     const num = Math.floor(Math.random() * 11);
     currentBalance = currency.getBalance(message.author.id)
     targetBalance = currency.getBalance(stealTarget)
@@ -269,4 +273,4 @@ client.on("message", async (message) => {
   }
 });
 
-client.login(process.env.TOKEN);
+client.login(process.env.token);
