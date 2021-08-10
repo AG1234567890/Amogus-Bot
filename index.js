@@ -155,7 +155,7 @@ client.on("message", async (message) => {
 
     return message.reply(
       `Successfully transferred ${transferAmount}💰 to ${
-        transferTarget
+        args[1]
       }. Your current balance is ${currency.getBalance(message.author.id)} 💰`
     );
 	 
