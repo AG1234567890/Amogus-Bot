@@ -200,7 +200,7 @@ message.reply(`You've bought: ${item.name}.`);
 }
   } else if (command === "steal") {
     if(message.mentions.members.first()) {
-      stealTarget = args[0]
+      let stealTarget = splice(args[0])
       if (currency.getBalance(stealTarget)<10000) {
         message.reply("The man is poor leave him alone")
       } else {
