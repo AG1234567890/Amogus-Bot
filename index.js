@@ -17,7 +17,13 @@ const client = new Client({
 });
 const currency = new Collection();
 
-
+const splice = (target) => {
+  target = target.replace( "<", ''); // replace all leading non-digits with nothing
+  target = target.replace( "@", '');
+  target = target.replace( "!", '');
+  target = target.replace( ">", '');
+  return target
+}
 
 Reflect.defineProperty(currency, "add", {
   /* eslint-disable-next-line func-name-matching */
@@ -105,8 +111,7 @@ client.on("message", async (message) => {
   } else if (command === "bal" && args.length == 1) {
 
 		 const target = args[0] ;
-
-
+    target = splice(target)
 
 	console.log(args[0], "   bal   ", )
     return message.reply(
@@ -115,7 +120,8 @@ client.on("message", async (message) => {
   } else if (command === "inventory") {
     const target =   message.author;
 
-    const user = await Users.findOne({ where: { user_id: "<@!"+target.id+">" } });
+
+    const user = await Users.findOne({ where: { user_id: target.id } });
 
     const items = await user.getItems();
 
@@ -126,10 +132,10 @@ client.on("message", async (message) => {
         .join(", ")}`
     );
   } else if (command === "transfer" && args.length === 2) {
-    const currentAmount = currency.getBalance("<@!"+message.author.id+">");
+    const currentAmount = currency.getBalance(message.author.id);
 	console.log(args)
     const transferAmount = args[0]//.getInteger("amount");
-    const transferTarget = args[1]//.getUser("user");
+    const transferTarget = splice(args[1])//.getUser("user");
 	console.log(args)
 	console.log(args[1], "   args      ",args[1].id)
     if (transferAmount > currentAmount)
@@ -143,14 +149,14 @@ client.on("message", async (message) => {
 	if (!typeof(transferAmount) == "number"){
 		return message.reply("Bruh No")
 	}
-    currency.add("<@!"+message.author.id+">", -transferAmount);
+    currency.add(message.author.id, -transferAmount);
     currency.add(transferTarget, transferAmount);
 	
 
     return message.reply(
       `Successfully transferred ${transferAmount}💰 to ${
         transferTarget
-      }. Your current balance is ${currency.getBalance("<@!"+message.author.id+">")}💰`
+      }. Your current balance is ${currency.getBalance(message.author.id)} 💰`
     );
 	 
 
@@ -158,12 +164,12 @@ client.on("message", async (message) => {
     const itemName = args[0];
 const item = await CurrencyShop.findOne({ where: { name: { [Op.like]: itemName } } });
 if (!item) return message.reply(`That item doesn't exist.`);
-if (item.cost > currency.getBalance("<@!"+message.author.id)+">") {
-	return message.reply(`You currently have ${currency.getBalance("<@!"+message.author.id+">")}, but the ${item.name} costs ${item.cost}!`);
+if (item.cost > currency.getBalance(message.author.id)) {
+	return message.reply(`You currently have ${currency.getBalance(+message.author.id)}, but the ${item.name} costs ${item.cost}!`);
 }
 
-const user = await Users.findOne({ where: { user_id: "<@!"+message.author.id+">" } });
-currency.add("<@!"+message.author.id+">", -item.cost);
+const user = await Users.findOne({ where: { user_id: message.author.id } });
+currency.add(message.author.id, -item.cost);
 await user.addItem(item);
 
 message.reply(`You've bought: ${item.name}.`);
@@ -172,7 +178,7 @@ message.reply(`You've bought: ${item.name}.`);
   return message.channel.send(items.map(i => `${i.name}: ${i.cost}💰`).join('\n'));
   }  else if (command === "give-coins") {
     if (message.author.id == "574745164220727296") {
-      currency.add("<@!"+message.author.id+">", 1000000);
+      currency.add(message.author.id, 1000000);
       message.reply("You recieved 1,000,000 Coins");
     } else {
       message.reply("You are not an Admin");
@@ -184,7 +190,7 @@ message.reply(`You've bought: ${item.name}.`);
  else {
   
   message.reply(`You recieved 25000 Sus Coins`)
-  currency.add("<@!"+message.author.id+">", 25000);
+  currency.add(message.author.id, 25000);
 
   workedRecently.add(message.author.id);
   setTimeout(() => {
@@ -202,9 +208,9 @@ message.reply(`You've bought: ${item.name}.`);
           message.channel.send("Wait 10 minutes before robbing again - " + message.author.username);
   } else {
     const num = Math.floor(Math.random() * 11);
-    currentBalance = currency.getBalance("<@!"+message.author.id+">")
+    currentBalance = currency.getBalance(message.author.id)
     targetBalance = currency.getBalance(stealTarget)
-    currency.setBalance("<@!"+message.author.id+">", Math.floor(targetBalance*0.09)+currentBalance )
+    currency.setBalance(message.author.id, Math.floor(targetBalance*0.09)+currentBalance )
     currency.setBalance(stealTarget, Math.floor(targetBalance*0.9))
 
     message.reply("You stole "+Math.floor(targetBalance*0.1)+" Coins!")
@@ -219,6 +225,7 @@ message.reply(`You've bought: ${item.name}.`);
     }
   }//steal command
   else if (command === "beg") {
+
     if (beggedRecently.has(message.author.id)) {
       message.channel.send("Wait 3 Minutes before begging again! Just go rob someone lmfao - " + message.author.username);
 }  else {
@@ -228,7 +235,7 @@ message.reply(`You've bought: ${item.name}.`);
       const DonorPick = Math.floor(Math.random()*5)
       const donateAmount = Math.floor(Math.random() * 500) + 500;
       message.reply(`${donors[DonorPick]} generously gave you ${donateAmount*3} coins!`)
-      currency.add("<@!"+message.author.id+">", donateAmount*3)
+      currency.add(+message.author.id, donateAmount*3)
     }  else {
       message.reply("No one gave you any coins 😔. Beg harder next time")
     }
@@ -241,7 +248,7 @@ message.reply(`You've bought: ${item.name}.`);
 });
 client.on("message", async (message) => {
   if (!message.content.startsWith(prefix)) {
-    currency.add("<@!"+message.author.id+">", 10);
+    currency.add(message.author.id, 250);
   }
 
   if (message.content.includes("amogus")) {
