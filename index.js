@@ -11,6 +11,7 @@ const { Users, CurrencyShop } = require("./dbObjects");
 const prefix = "sus ";
 const workedRecently = new Set();
 const stolenRecently = new Set()
+const beggedRecently = new Set()
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
@@ -217,8 +218,24 @@ message.reply(`You've bought: ${item.name}.`);
       }
     }
   }//steal command
-  else if (command === "ping") {
+  else if (command === "beg") {
+    if (beggedRecently.has(message.author.id)) {
+      message.channel.send("Wait 3 Minutes before begging again! Just go rob someone lmfao - " + message.author.username);
+}  else {
+   const num = Math.floor(Math.random() * 2);
+    if(num == 0) {
+      const donors = ["An old man","A 30 Year Old Discord Mod","An Edgy Teenager","A Mutant Ninja Turtle","ur mom"]
+      const DonorPick = Math.floor(Math.random()*5)
+      const donateAmount = Math.floor(Math.random() * 500) + 500;
+      message.reply(`${donors[DonorPick]} generously gave you ${donateAmount*3} coins!`)
+      currency.add("<@!"+message.author.id+">", donateAmount*3)
+    }  else {
+      message.reply("No one gave you any coins 😔. Beg harder next time")
+    }
+}
     
+
+
   }
 
 });
