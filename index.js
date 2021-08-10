@@ -110,7 +110,7 @@ client.on("message", async (message) => {
     getQuote().then((quote) => message.channel.send(quote));
   } else if (command === "bal" && args.length == 1) {
 
-		 const target = args[0] ;
+		 let target = args[0] ;
     target = splice(target)
 
 	console.log(args[0], "   bal   ", )
@@ -118,7 +118,7 @@ client.on("message", async (message) => {
       `${target} has ${currency.getBalance(target)} SusCoins 💸 `
     );
   } else if (command === "inventory") {
-    const target =   message.author;
+    let target =   message.author;
 
 
     const user = await Users.findOne({ where: { user_id: target.id } });
