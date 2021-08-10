@@ -203,8 +203,8 @@ message.reply(`You've bought: ${item.name}.`);
     const num = Math.floor(Math.random() * 11);
     currentBalance = currency.getBalance("<@!"+message.author.id+">")
     targetBalance = currency.getBalance(stealTarget)
-    currency.setBalance("<@!"+message.author.id+">", Math.floor(targetBalance*0.1) )
-    currency.setBalance(stealTarget, Math.floor(targetBalance*0.9) )
+    currency.setBalance("<@!"+message.author.id+">", Math.floor(targetBalance*0.09)+currentBalance )
+    currency.setBalance(stealTarget, Math.floor(targetBalance*0.9))
 
     message.reply("You stole "+Math.floor(targetBalance*0.1)+" Coins!")
       
