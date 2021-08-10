@@ -115,7 +115,7 @@ client.on("message", async (message) => {
 
 	console.log(args[0], "   bal   ", )
     return message.reply(
-      `${target} has ${currency.getBalance(target)} SusCoins 💸 `
+      `The hooman has ${currency.getBalance(target)} SusCoins 💸 `
     );
   } else if (command === "inventory") {
     let target =   message.author;
@@ -229,6 +229,11 @@ message.reply(`You've bought: ${item.name}.`);
     if (beggedRecently.has(message.author.id)) {
       message.channel.send("Wait 3 Minutes before begging again! Just go rob someone lmfao - " + message.author.username);
 }  else {
+  beggedRecently.add(message.author.id);
+  setTimeout(() => {
+    // Removes the user from the set after a minute
+    beggedRecently.delete(message.author.id);
+  }, 3*60000);
    const num = Math.floor(Math.random() * 2);
     if(num == 0) {
       const donors = ["An old man","A 30 Year Old Discord Mod","An Edgy Teenager","A Mutant Ninja Turtle","ur mom"]
