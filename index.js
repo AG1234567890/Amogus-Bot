@@ -217,7 +217,7 @@ message.reply(`You've bought: ${item.name}.`);
     currency.setBalance(message.author.id, Math.floor(targetBalance*0.09)+currentBalance )
     currency.setBalance(stealTarget, Math.floor(targetBalance*0.9))
 
-    message.reply("You stole "+Math.floor(targetBalance*0.1)+" Coins!")
+    message.reply("You stole "+Math.floor(targetBalance*0.09)+" Coins!")
       
       stolenRecently.add(message.author.id);
       setTimeout(() => {
