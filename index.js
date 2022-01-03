@@ -1,21 +1,23 @@
 // import DiscordJS, {Intents} from "discord.js"
 // import dotenv from "dotenv"
 
-const DiscordJS = require("discord.js")
+const { Client } = require("discord.js")
 const {Intents} = require("discord.js")
 const dotenv = require("dotenv")
 dotenv.config()
 //poggers championship :o
 
-const client = new DiscordJS.Client({
+const client = new Client({
     intents : [
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MESSAGES
     ]
 })
 
-client.on("ready", () => {
+client.once("ready", async () => {
     console.log("The bot has connected.")
+    client.user.setStatus('dnd');
+    client.user.setActivity('your internet activity', { type: 'WATCHING' });
 })
 
 client.on("messageCreate", (message)=>{
